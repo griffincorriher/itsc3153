@@ -1,0 +1,140 @@
+package programmingassignment;
+import java.util.*;
+
+
+public class assignment {
+
+	public static void main(String[] args) {
+		world.createWorld();
+	}
+	
+	public static class world{
+		public static void createWorld(){
+	        Random rng = new Random();
+	        LinkedHashSet<Integer> nodes = new LinkedHashSet<Integer>();
+	        while(nodes.size() < 225) {
+	        	nodes.add(rng.nextInt(225)+1);
+	        }    
+	        ArrayList<Integer> n = new ArrayList<>(nodes);
+	        Iterator<Integer> it = nodes.iterator();
+	
+			// Create blocked nodes
+	        int[] blockedNodes = new int[23];
+			for (int i = 0; i < blockedNodes.length; i++)
+			        blockedNodes[i] = n.indexOf(i+1);    
+	//        System.out.println(Arrays.toString(blockedNodes));
+			
+			// Create world grid
+			int[][] grid = new int[15][15];
+			for (int i = 0; i < 15; i++)
+			    for (int j = 0; j < 15; j++)
+			        grid[i][j] = it.next();
+			System.out.println("World (999 indicates blocked):");
+			for (int i = 0; i < 15; i++) {
+			    for (int j = 0; j < 15; j++) {
+			    	for (int k = 0; k < blockedNodes.length; k++) {
+			    		if(blockedNodes[k] == grid[i][j]) {
+			    			grid[i][j] = 999;
+			    		}
+			    	}
+			    	
+			    	if(String.valueOf(grid[i][j]).length() == 1){
+			    		System.out.print("[ "+ grid[i][j] +" ]");
+			    	}
+			    	else if(String.valueOf(grid[i][j]).length() == 2){
+			    		System.out.print("["+ grid[i][j] +" ]");
+			    	}
+			    	else {
+			    		System.out.print("["+ grid[i][j] +"]");
+			    	}
+			    }	System.out.println();
+			}
+			
+			
+			// Get x y coordinates of start and goal nodes
+			int[] startGoalNodes = selectNodes();
+            int[] startCoord = new int[2];
+		    for (int i=0; i < 15; i++) {
+		        for (int j=0; j < 15; j++) {
+		            if (grid[i][j] == startGoalNodes[0]) {
+		                int x = i;
+		                int y = j;
+		                startCoord[0] = x;
+		                startCoord[1] = y;
+		    		    System.out.println("Start node is at (" + x + ", " + y + ")");
+		            }
+		        }
+		    }
+            int[] goalCoord = new int[2];
+		    for (int i=0; i < 15; i++) {
+		        for (int j=0; j < 15; j++) {
+		            if (grid[i][j] == startGoalNodes[1]) {
+		                int x = i;
+		                int y = j;
+		                goalCoord[0] = x;
+		                goalCoord[1] = y;
+		    		    System.out.println("Goal node is at (" + x + ", " + y + ")");
+		            }
+		        } 
+		        
+		    }
+			heuristic(startCoord, goalCoord);
+
+		}
+		
+		
+	
+		public static int[] selectNodes(){
+			int startNode = 0;
+			int goalNode = 0;
+			Scanner s = new Scanner(System.in);
+			
+			System.out.print("Select start node 1 - 225 > ");
+			while(true) {
+				startNode = s.nextInt();
+				if(startNode < 1 || startNode > 225) {
+					System.out.print("Select start node 1 - 225 > ");
+				}
+				else {
+					break;
+				}
+				s.nextLine();		
+			}
+			
+			System.out.print("Select goal node 1 - 225 > ");
+			while(true) {
+				goalNode = s.nextInt();
+				if(goalNode < 1 || goalNode > 225) {
+					System.out.print("Select goal node 1 - 225 > ");
+				}
+				else {
+					break;
+				}		
+			}
+			s.nextLine();
+			s.close();
+			
+			int[] startGoalNodes = new int[2];
+			startGoalNodes[0] = startNode;
+			startGoalNodes[1] = goalNode;
+			
+			return startGoalNodes;
+		}
+		
+		
+	    public static int heuristic(int[] startCoord, int[] goalCoord){
+	        int x1 = startCoord[0];
+	        int y1 = startCoord[1];
+	        int x2 = goalCoord[0];
+	        int y2 = goalCoord[1];
+	        int h = Math.abs(x1 - x2) + Math.abs(y1 - y2);
+	        System.out.println("Heuristic value is: " + h);
+	        return h;
+	    }	
+	}
+	
+	
+	
+// TODO: Display path in series of [x,y] -> [x,y] nodes
+	
+}
