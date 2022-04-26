@@ -49,6 +49,10 @@ public class assignment98 {
 		public int gety() {
 			return y;
 		}
+		public String toWord() {
+			String result = "(" + getx() + "," + gety() + ")";
+			return result;
+		}
 	}
 	
 	
@@ -109,15 +113,16 @@ public class assignment98 {
 			return parent == null && position == null;
 		}
 		
-		public String toString() {
-			return "parent:" + getParent() + ", position: (" + getNodePositionx() + "," + getNodePositiony() + ")";
+		public String toWord() {
+			String result = "parent:" + getParent() + ", position: " + getNodePosition().toWord();
+			return result;
 		}
 	}
 	
 	class adjacentCell{
 		private int xValue;
 		private int yValue;
-	
+
 		public adjacentCell(int xValue, int yValue) {
 			this.xValue = xValue;
 			this.yValue = yValue;
@@ -128,7 +133,7 @@ public class assignment98 {
 		}
 		public int getyValue() {
 			return yValue;
-		}
+		}	
 	}
 		
 	
@@ -153,18 +158,17 @@ public class assignment98 {
 		frontier.add(startNode);
 		// Perform search
 		Position[] finalPath = null;
+		
 		while(frontier.size() > 0) {
 			Node currentNode = frontier.get(0);
-			System.out.println(currentNode.toString());
-
 			int currentIndex = 0;
+			System.out.println(currentNode);
 			for(Node node : frontier) {
 				if(node.f < currentNode.f){
 					currentNode = node;
 					currentIndex = frontier.indexOf(node);
 				}
 			}
-			
 			// Move current node from frontier to visited
 			frontier.remove(currentIndex);
 			visited.add(currentNode);
@@ -191,10 +195,10 @@ public class assignment98 {
 		location[1] = new adjacentCell(0,1);
 		location[2] = new adjacentCell(-1,0);
 		location[3] = new adjacentCell(1,0);
-		
 		for(adjacentCell p : location) {
 			Node p1 = new Node(currentNode, currentNode.getNodePosition());
-			Position newPosition = new Position(currentNode.getNodePositionx() + p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
+			Position newPosition = new Position(currentNode.getNodePositionx()+ p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
+
 			p1.setNodePosition(newPosition);
             if(p1.getNodePositionx() > (grid.length - 1) ||
                p1.getNodePositionx() < 0 ||
@@ -219,9 +223,9 @@ public class assignment98 {
 	         c1.g = currentNode.g + 1;
 	         c1.h = Math.abs(c1.getNodePositionx() - goalNode.getNodePositionx()) + Math.abs(c1.getNodePositiony() - goalNode.getNodePositiony());
 	         c1.f = c1.g + c1.h;
-	         
-	         for(Node o : frontier) {
-	        	 if(c1 == o && c1.g > o.g) {
+	         for(Node n : frontier) {
+
+	        	 if(c1 == n && c1.g > n.g) {
 	        		 continue;
 	        	 	}
 	         	}
