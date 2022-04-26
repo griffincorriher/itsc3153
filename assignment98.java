@@ -26,6 +26,7 @@ public class assignment98 {
 		}
 		public int gety() {
 			return y;
+		}
 	}
 	
 	
@@ -55,13 +56,13 @@ public class assignment98 {
 			return parent;
 		}
 		
-		public Position getPosition() {
+		public Position getNodePosition() {
 			return position;
 		}
-		public int getPositionx() {
+		public int getNodePositionx() {
 			return position.x;
 		}
-		public int getPositiony() {
+		public int getNodePositiony() {
 			return position.y;
 		}
 		
@@ -78,20 +79,13 @@ public class assignment98 {
 		public void setParent(Node parent) {
 			this.parent = parent;
 		}
-		public void setPosition(Position position) {
+		public void setNodePosition(Position position) {
 			this.position = position;
-		}
-		public void setPositionx(Position position) {
-			this.position.x = position.x;
-		}
-		public void setPositiony(Position position) {
-			this.position.y = position.y;
 		}
 				
 		public boolean isEmpty() {
 			return parent == null && position == null;
-		}
-		
+		}	
 	}
 	
 	class adjacentCell{
@@ -152,7 +146,7 @@ public class assignment98 {
 				ArrayList<Position> path = new ArrayList<>();
 				Node current = currentNode;
 				while(!current.isEmpty()) {
-					path.add(current.getPosition());
+					path.add(current.getNodePosition());
 					current = current.parent;
 				Collections.reverse(path);
 				Object[] objPath = path.toArray();
@@ -164,22 +158,24 @@ public class assignment98 {
 				return finalPath;	
 			}
 		ArrayList<Node> children = new ArrayList<>();	
-		adjacentCell position[] = new adjacentCell[4];
-		position[0] = new adjacentCell(0,-1);
-		position[1] = new adjacentCell(0,1);
-		position[2] = new adjacentCell(-1,0);
-		position[3] = new adjacentCell(1,0);
+		adjacentCell location[] = new adjacentCell[4];
+		location[0] = new adjacentCell(0,-1);
+		location[1] = new adjacentCell(0,1);
+		location[2] = new adjacentCell(-1,0);
+		location[3] = new adjacentCell(1,0);
 		
-		for(adjacentCell p : position) {
-			Position p1 = (currentNode.getPositionx() + p.getxValue()),(currentNode.getPositiony() + p.getyValue());
-            if(p1.get > (grid.length - 1) ||
-            					  nodePosition[0] < 0 ||
-            					  nodePosition[1] > grid.length - 1 ||
-            					  nodePosition[1] < 0) {
+		for(adjacentCell p : location) {
+			Node p1 = new Node(currentNode.parent, currentNode.getNodePosition());
+			Position newPosition = new Position(currentNode.getNodePositionx() + p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
+			p1.setNodePosition(newPosition);
+            if(p1.getNodePositionx() > (grid.length - 1) ||
+               p1.getNodePositionx() < 0 ||
+               p1.getNodePositiony() > grid.length - 1 ||
+               p1.getNodePositiony() < 0) {
             	continue;
             }
             
-            if(grid[nodePosition[0]][nodePosition[1]] != 0){
+            if(grid[p1.getNodePositionx()][p1.getNodePositiony()] != 0){
             	continue;
             	}
             
