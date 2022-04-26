@@ -21,8 +21,8 @@ public class assignment98 {
 		Position start = new Position(startX, startY);
 		Position goal = new Position(goalX,goalY);
 		
-		Position[] path = aStar(grid, start, goal);
-		System.out.println(path);
+		assignment98 a = new assignment98();
+		a.aStar(grid, start, goal);
 	}
    
 	static class Position{
@@ -119,7 +119,7 @@ public class assignment98 {
 	}
 		
 	
-	public static Position[] aStar(int[][] grid, Position start, Position goal) {
+	public void aStar(int[][] grid, Position start, Position goal) {
 		// Instantiate start and goal nodes
 		Node startNode = new Node(null, start);
 		startNode.setF(0);
@@ -168,7 +168,7 @@ public class assignment98 {
 					finalPath[i] = (Position)objPath[i];
 					}
 				}	
-				return finalPath;	
+				System.out.println(finalPath);	
 			}
 		ArrayList<Node> children = new ArrayList<>();	
 		adjacentCell location[] = new adjacentCell[4];
