@@ -6,22 +6,31 @@ public class assignment98 {
 		Scanner s = new Scanner(System.in);
 		
 		int[][] grid = generateGrid();
-//		int[][] grid = new int[15][15];
+		for( int[] i: grid) {
+			System.out.println(Arrays.toString(i));
+		}
+
+		//		int[][] grid = new int[15][15];
 		
+		System.out.println("Enter starting x value");
 		int startX = s.nextInt();
 		s.nextLine();
+		System.out.println("Enter starting y value");
 		int startY = s.nextInt();
 		s.nextLine();
+		System.out.println("Enter goal x value");
 		int goalX = s.nextInt();
 		s.nextLine();
+		System.out.println("Enter goal y value");
 		int goalY = s.nextInt();
 		s.nextLine();
 		s.close();
 		
 		Position start = new Position(startX, startY);
 		Position goal = new Position(goalX,goalY);
-		
+
 		assignment98 a = new assignment98();
+
 		a.aStar(grid, start, goal);
 	}
    
@@ -98,7 +107,11 @@ public class assignment98 {
 				
 		public boolean isEmpty() {
 			return parent == null && position == null;
-		}	
+		}
+		
+		public String toString() {
+			return "parent:" + getParent() + ", position: (" + getNodePositionx() + "," + getNodePositiony() + ")";
+		}
 	}
 	
 	class adjacentCell{
@@ -120,6 +133,7 @@ public class assignment98 {
 		
 	
 	public void aStar(int[][] grid, Position start, Position goal) {
+		
 		// Instantiate start and goal nodes
 		Node startNode = new Node(null, start);
 		startNode.setF(0);
@@ -137,7 +151,7 @@ public class assignment98 {
 		
 		// Add start node
 		openList.add(startNode);
-		
+		System.out.println(startNode.toString());
 		// Perform search
 		Position[] finalPath = null;
 		while(openList.size() > 0) {
@@ -213,6 +227,7 @@ public class assignment98 {
 	         openList.add(c1);
 			}
 		}
+		
 	}
 	
 	public static int[][] generateGrid(){
