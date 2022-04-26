@@ -146,27 +146,28 @@ public class assignment98 {
 		goalNode.setH(0);
 
 		// Instantiate empty lists
-		ArrayList<Node> openList = new ArrayList<Node>();
-		ArrayList<Node> closedList = new ArrayList<Node>();		
+		ArrayList<Node> frontier = new ArrayList<Node>();
+		ArrayList<Node> visited = new ArrayList<Node>();		
 		
 		// Add start node
-		openList.add(startNode);
-		System.out.println(startNode.toString());
+		frontier.add(startNode);
 		// Perform search
 		Position[] finalPath = null;
-		while(openList.size() > 0) {
-			Node currentNode = openList.get(0);
+		while(frontier.size() > 0) {
+			Node currentNode = frontier.get(0);
+			System.out.println(currentNode.toString());
+
 			int currentIndex = 0;
-			for(Node node : openList) {
+			for(Node node : frontier) {
 				if(node.f < currentNode.f){
 					currentNode = node;
-					currentIndex = openList.indexOf(node);
+					currentIndex = frontier.indexOf(node);
 				}
 			}
 			
-			// Move current node from open list to closed list
-			openList.remove(currentIndex);
-			closedList.add(currentNode);
+			// Move current node from frontier to visited
+			frontier.remove(currentIndex);
+			visited.add(currentNode);
 			
 			// If goal is found
 			if(currentNode == goalNode) {
@@ -192,7 +193,7 @@ public class assignment98 {
 		location[3] = new adjacentCell(1,0);
 		
 		for(adjacentCell p : location) {
-			Node p1 = new Node(currentNode.parent, currentNode.getNodePosition());
+			Node p1 = new Node(currentNode, currentNode.getNodePosition());
 			Position newPosition = new Position(currentNode.getNodePositionx() + p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
 			p1.setNodePosition(newPosition);
             if(p1.getNodePositionx() > (grid.length - 1) ||
@@ -210,7 +211,7 @@ public class assignment98 {
             children.add(newNode);
 			}
 		for(Node c1 : children) {
-			for(Node c2 : closedList) {
+			for(Node c2 : visited) {
 				if(c1 == c2) {
 					continue;
 					}
@@ -219,12 +220,12 @@ public class assignment98 {
 	         c1.h = Math.abs(c1.getNodePositionx() - goalNode.getNodePositionx()) + Math.abs(c1.getNodePositiony() - goalNode.getNodePositiony());
 	         c1.f = c1.g + c1.h;
 	         
-	         for(Node o : openList) {
+	         for(Node o : frontier) {
 	        	 if(c1 == o && c1.g > o.g) {
 	        		 continue;
 	        	 	}
 	         	}
-	         openList.add(c1);
+	         frontier.add(c1);
 			}
 		}
 		
