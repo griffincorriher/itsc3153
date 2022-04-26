@@ -4,7 +4,9 @@ import java.util.*;
 public class assignment98 {
 	public static void main(String[] args){
 		Scanner s = new Scanner(System.in);
-		int[][] grid = new int[15][15];
+		
+		int[][] grid = generateGrid();
+//		int[][] grid = new int[15][15];
 		
 		int startX = s.nextInt();
 		s.nextLine();
@@ -212,4 +214,13 @@ public class assignment98 {
 			}
 		}
 	}
+	
+	public static int[][] generateGrid(){
+		int[][] grid = new int[15][15];
+		for(int i = 0; i < 15; i++) {
+			for(int j = 0; i < 15; i++) {
+				grid[i][j] = 0;
+			}
+		}
+		return grid;
 }
