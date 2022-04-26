@@ -3,10 +3,21 @@ import java.util.*;
 
 public class assignment98 {
 	public static void main(String[] args){
-
+		Scanner s = new Scanner(System.in);
 		int[][] grid = new int[15][15];
-		Position start = new Position(0,0);
-		Position goal = new Position(1,1);
+		
+		int startX = s.nextInt();
+		s.nextLine();
+		int startY = s.nextInt();
+		s.nextLine();
+		int goalX = s.nextInt();
+		s.nextLine();
+		int goalY = s.nextInt();
+		s.nextLine();
+		s.close();
+		
+		Position start = new Position(startX, startY);
+		Position goal = new Position(goalX,goalY);
 		
 		Position[] path = aStar(grid, start, goal);
 		System.out.println(path);
@@ -179,7 +190,7 @@ public class assignment98 {
             	continue;
             	}
             
-            Node newNode = new Node(currentNode, currentNode.getPosition());
+            Node newNode = new Node(currentNode, currentNode.getNodePosition());
             children.add(newNode);
 			}
 		for(Node c1 : children) {
@@ -189,7 +200,7 @@ public class assignment98 {
 					}
 				}
 	         c1.g = currentNode.g + 1;
-	         c1.h = Math.abs(c1.getPositionx() - goalNode.getPositionx()) + Math.abs(c1.getPositiony() - goalNode.getPositiony());
+	         c1.h = Math.abs(c1.getNodePositionx() - goalNode.getNodePositionx()) + Math.abs(c1.getNodePositiony() - goalNode.getNodePositiony());
 	         c1.f = c1.g + c1.h;
 	         
 	         for(Node o : openList) {
