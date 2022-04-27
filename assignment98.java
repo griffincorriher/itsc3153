@@ -4,33 +4,31 @@ import java.util.*;
 public class assignment98 {
 	public static void main(String[] args){
 		Scanner s = new Scanner(System.in);
+		assignment98 a = new assignment98();
 		
 		int[][] grid = generateGrid();
-		for( int[] i: grid) {
-			System.out.println(Arrays.toString(i));
-		}
 
-		//		int[][] grid = new int[15][15];
-		
+		// Enter start coordinates
 		System.out.println("Enter starting x value");
 		int startX = s.nextInt();
 		s.nextLine();
 		System.out.println("Enter starting y value");
 		int startY = s.nextInt();
 		s.nextLine();
+		Position start = new Position(startX, startY);
+		
+		// Enter goal coordinates
 		System.out.println("Enter goal x value");
 		int goalX = s.nextInt();
 		s.nextLine();
 		System.out.println("Enter goal y value");
 		int goalY = s.nextInt();
+		Position goal = new Position(goalX,goalY);
+		
 		s.nextLine();
 		s.close();
-		
-		Position start = new Position(startX, startY);
-		Position goal = new Position(goalX,goalY);
 
-		assignment98 a = new assignment98();
-
+		// Perform a* search
 		a.aStar(grid, start, goal);
 	}
    
@@ -169,8 +167,8 @@ public class assignment98 {
 		
 		// Add start node
 		frontier.add(startNode);
+		
 		// Perform search
-		Node[] finalPath = null;
 		
 		// Loop through frontier
 		while(frontier.size() > 0) {
@@ -179,10 +177,10 @@ public class assignment98 {
 			Node currentNode = frontier.get(0);
 			int currentIndex = 0;			
 			for(Node node : frontier) {
-				System.out.println("Current node f: " + currentNode.f);
-				System.out.println("Current node position: " + currentNode.getNodePosition().toWord());
-				System.out.println("Frontier node f: " + node.f);
-				System.out.println("Frontier node position: " + node.getNodePosition().toWord());
+//				System.out.println("Current node f: " + currentNode.f);
+//				System.out.println("Current node position: " + currentNode.getNodePosition().toWord());
+//				System.out.println("Frontier node f: " + node.f);
+//				System.out.println("Frontier node position: " + node.getNodePosition().toWord());
 
 
 				if(node.f < currentNode.f) {
@@ -208,7 +206,9 @@ public class assignment98 {
 //			System.out.println(currentNode.toWord());
 
 			if(currentNode.getNodePosition().toWord().equals(goalNode.getNodePosition().toWord())) {
+				Node[] finalPath = null;
 				System.out.println("Path found!");
+		    	System.out.println("Start node: " + startNode);
 				ArrayList<Node> node = new ArrayList<>();
 				Node current = currentNode;
 				while(!current.isEmpty()) {
@@ -219,13 +219,15 @@ public class assignment98 {
 				finalPath = new Node[node.size()];
 				for(int i = 0; i < objPath.length; i++) {
 					finalPath[i] = (Node)objPath[i];
+//					System.out.println(finalPath[i]);
 					}
 				}	
 			    for(Node p: finalPath) {
+			    	
 //			    	System.out.println(p);
+			    	System.out.print(p.getNodePosition().toWord() + "->");
 //			    	System.out.println(p.toWord());
-			    	System.out.println("Node: " + p.toWord());
-			    	System.out.println("Node parent: " + p.parent.toWord());
+//			    	System.out.println("Node parent: " + p.parent.toWord());
 			    }
 			    break;
 			}
@@ -238,7 +240,6 @@ public class assignment98 {
 		for(adjacentCell p : location) {
 			Node p1 = new Node(currentNode, currentNode.getNodePosition());
 			Position newPosition = new Position(currentNode.getNodePositionx()+ p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
-
 			p1.setNodePosition(newPosition);
             if(p1.getNodePositionx() > (grid.length - 1) ||
                p1.getNodePositionx() < 0 ||
@@ -278,10 +279,13 @@ public class assignment98 {
 	public static int[][] generateGrid(){
 		int[][] grid = new int[15][15];
 		for(int i = 0; i < 15; i++) {
-			for(int j = 0; i < 15; i++) {
+			for(int j = 0; j < 15; j++) {
 				grid[i][j] = 0;
 			}
 		}
+		for( int[] i: grid) {
+			System.out.println(Arrays.toString(i));
+		}		
 		return grid;
 	}
 }
