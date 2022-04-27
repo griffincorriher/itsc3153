@@ -53,6 +53,19 @@ public class assignment98 {
 			String result = "(" + getx() + "," + gety() + ")";
 			return result;
 		}
+		
+	    @Override
+	    public boolean equals(Object obj) 
+	    {
+	        if (this == obj)
+	            return true;
+	        if (obj == null)
+	            return false;
+	        if (getClass() != obj.getClass())
+	            return false;
+	        return true;
+	    }
+		
 	}
 	
 	
@@ -110,11 +123,11 @@ public class assignment98 {
 		}
 				
 		public boolean isEmpty() {
-			return parent == null && position == null;
+			return parent == null;
 		}
 		
 		public String toWord() {
-			String result = "parent:" + getParent() + ", position: " + getNodePosition().toWord();
+			String result = "parent: " + getParent() + "\n" + "position: " + getNodePosition().toWord();
 			return result;
 		}
 	}
@@ -159,22 +172,35 @@ public class assignment98 {
 		// Perform search
 		Position[] finalPath = null;
 		
+		// Loop through frontier
 		while(frontier.size() > 0) {
+			
+			// Get current node
 			Node currentNode = frontier.get(0);
-			int currentIndex = 0;
-			System.out.println(currentNode);
+			int currentIndex = 0;			
 			for(Node node : frontier) {
-				if(node.f < currentNode.f){
+				if(node.f < currentNode.f) {
 					currentNode = node;
 					currentIndex = frontier.indexOf(node);
 				}
 			}
+///			System.out.println("Current node: " + currentNode);
+///            System.out.println(currentNode.toWord());
+
 			// Move current node from frontier to visited
 			frontier.remove(currentIndex);
 			visited.add(currentNode);
 			
-			// If goal is found
-			if(currentNode == goalNode) {
+//			System.out.println("Current Node: " + currentNode + "\n" + "Goal node: " + goalNode);
+//			System.out.println(currentNode.toWord() + "\n");
+			
+//			System.out.println("current node position: " + currentNode.getNodePosition());
+//			System.out.println("current node position: " + goalNode.getNodePosition());		
+			
+			// If goal is found, print the path	
+
+
+			if(currentNode.getNodePosition().toWord().equals(goalNode.getNodePosition().toWord())) {
 				ArrayList<Position> path = new ArrayList<>();
 				Node current = currentNode;
 				while(!current.isEmpty()) {
@@ -187,7 +213,9 @@ public class assignment98 {
 					finalPath[i] = (Position)objPath[i];
 					}
 				}	
-				System.out.println(finalPath);	
+			    for(Position p: finalPath) {
+			    	System.out.println(p.toWord());
+			    }
 			}
 		ArrayList<Node> children = new ArrayList<>();	
 		adjacentCell location[] = new adjacentCell[4];
@@ -211,7 +239,7 @@ public class assignment98 {
             	continue;
             	}
             
-            Node newNode = new Node(currentNode, currentNode.getNodePosition());
+            Node newNode = new Node(currentNode, newPosition);
             children.add(newNode);
 			}
 		for(Node c1 : children) {
@@ -229,6 +257,7 @@ public class assignment98 {
 	        		 continue;
 	        	 	}
 	         	}
+	         
 	         frontier.add(c1);
 			}
 		}
