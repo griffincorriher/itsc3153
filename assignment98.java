@@ -170,7 +170,7 @@ public class assignment98 {
 		// Add start node
 		frontier.add(startNode);
 		// Perform search
-		Position[] finalPath = null;
+		Node[] finalPath = null;
 		
 		// Loop through frontier
 		while(frontier.size() > 0) {
@@ -179,6 +179,12 @@ public class assignment98 {
 			Node currentNode = frontier.get(0);
 			int currentIndex = 0;			
 			for(Node node : frontier) {
+				System.out.println("Current node f: " + currentNode.f);
+				System.out.println("Current node position: " + currentNode.getNodePosition().toWord());
+				System.out.println("Frontier node f: " + node.f);
+				System.out.println("Frontier node position: " + node.getNodePosition().toWord());
+
+
 				if(node.f < currentNode.f) {
 					currentNode = node;
 					currentIndex = frontier.indexOf(node);
@@ -199,23 +205,29 @@ public class assignment98 {
 			
 			// If goal is found, print the path	
 
+//			System.out.println(currentNode.toWord());
 
 			if(currentNode.getNodePosition().toWord().equals(goalNode.getNodePosition().toWord())) {
-				ArrayList<Position> path = new ArrayList<>();
+				System.out.println("Path found!");
+				ArrayList<Node> node = new ArrayList<>();
 				Node current = currentNode;
 				while(!current.isEmpty()) {
-					path.add(current.getNodePosition());
+					node.add(current);
 					current = current.parent;
-				Collections.reverse(path);
-				Object[] objPath = path.toArray();
-				finalPath = new Position[path.size()];
+				Collections.reverse(node);
+				Object[] objPath = node.toArray();
+				finalPath = new Node[node.size()];
 				for(int i = 0; i < objPath.length; i++) {
-					finalPath[i] = (Position)objPath[i];
+					finalPath[i] = (Node)objPath[i];
 					}
 				}	
-			    for(Position p: finalPath) {
-			    	System.out.println(p.toWord());
+			    for(Node p: finalPath) {
+//			    	System.out.println(p);
+//			    	System.out.println(p.toWord());
+			    	System.out.println("Node: " + p.toWord());
+			    	System.out.println("Node parent: " + p.parent.toWord());
 			    }
+			    break;
 			}
 		ArrayList<Node> children = new ArrayList<>();	
 		adjacentCell location[] = new adjacentCell[4];
@@ -252,7 +264,6 @@ public class assignment98 {
 	         c1.h = Math.abs(c1.getNodePositionx() - goalNode.getNodePositionx()) + Math.abs(c1.getNodePositiony() - goalNode.getNodePositiony());
 	         c1.f = c1.g + c1.h;
 	         for(Node n : frontier) {
-
 	        	 if(c1 == n && c1.g > n.g) {
 	        		 continue;
 	        	 	}
