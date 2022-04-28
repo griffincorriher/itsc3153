@@ -7,53 +7,49 @@ import java.util.*;
 
 public class assignment98 {
 	public static void main(String[] args){
-		boolean startSearch = true;
 		Scanner s = new Scanner(System.in);
-
+		boolean startSearch = true;
+		Position start = new Position(0,0);
+		Position goal = new Position(0,0);
+		
 		while(startSearch){
 			assignment98 a = new assignment98();
-			System.out.println();
 			int[][] grid = generateGrid();
-
-			
-			// Need to check that start node isn't a 1
-			
-			// Enter start coordinates
-			System.out.print("Enter starting x value > ");
-			int startX = s.nextInt();
-			s.nextLine();
-			System.out.print("Enter starting y value > ");
-			int startY = s.nextInt();
-			s.nextLine();
-			Position start = new Position(startX, startY);
-			for(int i = 0; i < grid.length; i++) {
-//				for(int j = 0; j < grid.length; j++) {
-//					if(grid[j] == start.getx() &&)
-//				}
+			// Get user input
+			while(start.toWord().equals(goal.toWord())) {
+				System.out.println("Select start location");
+				start = userInput(grid, s);
+				System.out.println("Select goal location");
+				goal = userInput(grid, s);
+				if(start.toWord().equals(goal.toWord())) {
+					System.out.println("Start cannont be the same as goal!");
+				}
 			}
-			
-			// Need to check that goal node isn't a 1
-			
-			// Enter goal coordinates
-			System.out.print("Enter goal x value > ");
-			int goalX = s.nextInt();
-			s.nextLine();
-			System.out.print("Enter goal y value > ");
-			int goalY = s.nextInt();
-			Position goal = new Position(goalX, goalY);
-			
-			s.nextLine();
 
 			// Perform A* search
-			a.aStar(grid, start, goal);
-			
-			// Search again?
-			System.out.print("Would you like to search again? (y or n) > ");
-			String response = s.nextLine();
 
-			if(response.equals("n")) {
-				startSearch = false;
-				s.close();
+			a.aStar(grid, start, goal);
+
+
+			// Search again?
+			String response = null;
+			while (response == null || !response.equals("y") || !response.equals("n")) {
+				System.out.print("Would you like to search again? (y or n) > ");
+				response = s.nextLine().toLowerCase();
+				switch(response) {
+					case ("y"):
+						startSearch = true;
+						break;
+					case ("n"):
+						startSearch = false;
+						break;
+					default:
+						System.out.println("Not a valid response");
+						break;
+				} 
+				if(response.equals("y") || response.equals("n")) {
+					break;
+				}
 			}
 		}
 	}
@@ -190,6 +186,27 @@ public class assignment98 {
 	}
 		
 	
+	public static Position userInput(int[][] grid, Scanner s) {
+		boolean valid = false;
+		Position position = null;
+		while(!valid) {
+			System.out.print("Enter x coordinate > ");
+			int x = s.nextInt();
+			s.nextLine();
+			System.out.print("Enter y coordinate > ");
+			int y = s.nextInt();
+			s.nextLine();
+			if(grid[y][x] != 1) {
+				valid = true;
+				position = new Position(x,y);
+				}
+			else {
+				System.out.println("Cell is blocked, please choose again.");
+			}
+		}
+		return position;
+	}
+	
 	public void aStar(int[][] grid, Position start, Position goal) {
 		System.out.println();
 		System.out.println("Searching for a path...");
@@ -318,6 +335,7 @@ public class assignment98 {
 		for(int[] i: grid) {
 			System.out.println(Arrays.toString(i));
 		}		
+		System.out.println();
 		return grid;
 	}
 	
@@ -329,20 +347,24 @@ public class assignment98 {
 		
 		// Update grid
 		grid[startNode.getNodePositiony()][startNode.getNodePositionx()] = 2;
-				for(Node n : finalPath) {
-					System.out.println("Next step...");
-					grid[n.getNodePositiony()][n.getNodePositionx()] = 3;
-					grid[goalNode.getNodePositiony()][goalNode.getNodePositionx()] = 4;
-					for(int[] r : grid) {
-						System.out.println(Arrays.toString(r));
-				}
-					System.out.println();
+		grid[goalNode.getNodePositiony()][goalNode.getNodePositionx()] = 4;
+		for(int[] r : grid) {
+			System.out.println(Arrays.toString(r));
+			}
+		for(Node n : finalPath) {
+			System.out.println("Next step...");
+			grid[n.getNodePositiony()][n.getNodePositionx()] = 3;
+			grid[goalNode.getNodePositiony()][goalNode.getNodePositionx()] = 4;
+			for(int[] r : grid) {
+				System.out.println(Arrays.toString(r));
+			}
+			System.out.println();
 		}		
 	    System.out.println();
 	    System.out.println("Final path taken from " + startNode.getNodePosition().toWord() + " to " + goalNode.getNodePosition().toWord());
     	System.out.print(startNode.getNodePosition().toWord());
 	    for(Node p: finalPath) {
-	    	System.out.print("->" +p.getNodePosition().toWord());
+	    	System.out.print("->" + p.getNodePosition().toWord());
 	    }
     	System.out.println();
     	System.out.println();
