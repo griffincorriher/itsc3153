@@ -230,7 +230,6 @@ public class assignment98 {
 			    	System.out.print("->" +p.getNodePosition().toWord());
 			    }
 		    	System.out.println();
-  
 			    break;
 			}
 		ArrayList<Node> children = new ArrayList<>();	
@@ -270,11 +269,9 @@ public class assignment98 {
 	        		 continue;
 	        	 	}
 	         	}
-	         
 	         frontier.add(c1);
 			}
 		}
-		
 	}
 
 	public static int[][] generateGrid(){
@@ -295,7 +292,6 @@ public class assignment98 {
 				grid[ri][rj] = 1;
 			}
 		}
-		
 		for(int[] i: grid) {
 			System.out.println(Arrays.toString(i));
 		}		
@@ -307,11 +303,17 @@ public class assignment98 {
 		// Update grid
 		grid[startNode.getNodePositiony()][startNode.getNodePositionx()] = 2;
 				for(Node n : finalPath) {
+					System.out.println("Next step...");
+
 					grid[n.getNodePositiony()][n.getNodePositionx()] = 2;	
+					for(int[] r : grid) {
+						System.out.println(Arrays.toString(r));
 				}
+					System.out.println();
+
 //		System.out.println(grid);
-		for(int[] r : grid) {
-			System.out.println(Arrays.toString(r));
+//		for(int[] r : grid) {
+//			System.out.println(Arrays.toString(r));
 		}	
 	}	
 }
