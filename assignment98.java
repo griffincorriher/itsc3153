@@ -18,23 +18,24 @@ public class assignment98 {
 			
 			  int[][] grid =   {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0},
 								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-								{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,0},
+								{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
 								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
 								{1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
 								{0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0},
 								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,0, 1, 0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0},
 								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
 								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0},
 								{0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
 								{0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0},
-								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0, 0, 0, 0, 0}, 
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, 
 								{0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1},
 								{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0}};
 			 
 			
 			Position start = new Position(0,0);
 			Position goal = new Position(0,0);
+			
 			// Get user input
 			while(start.toWord().equals(goal.toWord())) {
 				System.out.println("Select start location");
@@ -73,7 +74,180 @@ public class assignment98 {
 			}
 		}
 	}
-   
+   	
+	public void aStar(int[][] grid, Position start, Position goal) {
+		System.out.println();
+		System.out.println("Searching for a path...");
+		
+		// Instantiate start and goal nodes
+		Node startNode = new Node(null, start);
+		startNode.setF(0);
+		startNode.setG(0);
+		startNode.setH(0);
+		
+		Node goalNode = new Node(null, goal);
+		goalNode.setF(0);
+		goalNode.setG(0);
+		goalNode.setH(0);
+
+		// Instantiate empty lists
+		PriorityQueue<Node> frontier = new PriorityQueue<Node>(5, new nodeComparator());
+		ArrayList<Node> visited = new ArrayList<Node>();	
+		
+		// Add start node
+		frontier.add(startNode);
+
+		// Loop through frontier
+		while(!frontier.isEmpty()) {
+
+			// Get current node
+			Node currentNode = frontier.peek();	
+			
+			// Move current node from frontier to visited
+	        for (Node n : frontier) {
+				if(n.f < currentNode.f) {
+					currentNode = n;
+				}
+			}
+
+			
+			frontier.remove(currentNode);	
+			visited.add(currentNode);
+			
+			// If goal is found, print the path	
+			if(currentNode.getNodePosition().toWord().equals(goalNode.getNodePosition().toWord())) {	    	
+				Node[] finalPath = null;		    	
+				ArrayList<Node> nodeList = new ArrayList<>();
+				Node current = currentNode;
+				while(!current.isEmpty()) {
+					nodeList.add(current);
+					current = current.parent;
+
+				// Reverses path for printing
+				ArrayList<Node> revNodeList = new ArrayList<Node>();
+		        for (int i = nodeList.size() - 1; i >= 0; i--) {
+		            revNodeList.add(nodeList.get(i));
+		        }
+				finalPath = new Node[nodeList.size()];
+				for(int i = 0; i < revNodeList.size(); i++) {
+					finalPath[i] = revNodeList.get(i);
+					}
+				}	
+				
+				// Prints path
+			    updateGrid(grid, finalPath, startNode, goalNode);  
+			    break;
+			}
+		ArrayList<Node> children = new ArrayList<>();	
+		adjacentCell location[] = new adjacentCell[4];
+		location[0] = new adjacentCell(0,-1);
+		location[1] = new adjacentCell(0,1);
+		location[2] = new adjacentCell(-1,0);
+		location[3] = new adjacentCell(1,0);
+		for(adjacentCell p : location) {
+			Position newPosition = new Position(currentNode.getNodePositionx()+ p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
+			Node p1 = new Node(currentNode, newPosition);
+            if(p1.getNodePositionx() > (grid.length - 1) ||
+            	p1.getNodePositionx()  < 0 ||
+            	p1.getNodePositiony()  > grid.length - 1 ||
+            	p1.getNodePositiony()  < 0) {
+            	continue;
+            }            
+            if(grid[newPosition.gety()][newPosition.getx()] != 0){
+            	continue;
+            	}
+            
+            Node newNode = new Node(currentNode, newPosition);
+            children.add(newNode);
+			}
+		for(Node c1 : children) {
+			for(Node cv : visited) {
+				if(c1.getNodePosition().toWord().equals(cv.getNodePosition().toWord())) {
+					continue;
+					}
+				}         
+	         for(Node cf : frontier) {
+	        	 if(c1.getNodePosition().toWord().equals(cf.getNodePosition().toWord()) && c1.g > cf.g){
+	        			 continue;
+	        	 }
+	         }
+	         c1.g = currentNode.g + 1;
+	         c1.h = Math.abs(goalNode.getNodePositionx() - c1.getNodePositionx()) + Math.abs(goalNode.getNodePositiony() - c1.getNodePositiony());
+	         c1.f = c1.g + c1.h;
+	         frontier.add(c1);
+		}
+//		if(frontier.size()>10000) {
+//			System.out.println("No path could be found");
+//			break;
+//			}
+		}
+		if(frontier.size() == 0 || frontier.size() > 10000) {		
+			System.out.println("No path could be found");	
+		}
+	}
+
+	public static int[][] generateGrid(){
+		// Generate blank grid
+		int[][] grid = new int[15][15];
+				
+		// Generate grid
+		System.out.println("Grid (1 indicates blocked cell, 0 indicates free cell)");
+		for(int i = 0; i < 15; i++) {
+			for(int j = 0; j < 15; j++) {
+				grid[i][j] = 0;
+			}
+		}
+
+		// Generate 10% of blocked cells
+		int[] blockedCells = new int[(int)Math.ceil(15*15/10)+1];
+		Arrays.fill(blockedCells, 1);
+		Random r = new Random();
+		for(int c = 0; c < blockedCells.length; c++) {
+			int i = r.nextInt(15);
+			int j = r.nextInt(15);
+			if(grid[i][j]==1) {
+				c--;
+			}
+			grid[i][j] = blockedCells[c];
+		}
+		for(int[] i: grid) {
+			System.out.println(Arrays.toString(i));
+		}		
+		System.out.println();
+		return grid;
+	}
+	
+	private void updateGrid(int[][] grid, Node[] finalPath, Node startNode, Node goalNode) {
+		System.out.println("Path found!");
+		System.out.println();
+		System.out.println("Updated grid with path");
+		System.out.println("2: start node, 3: path, 4: goal node");
+		
+		// Update grid
+		grid[startNode.getNodePositiony()][startNode.getNodePositionx()] = 2;
+		grid[goalNode.getNodePositiony()][goalNode.getNodePositionx()] = 4;
+		for(int[] r : grid) {
+			System.out.println(Arrays.toString(r));
+			}
+		for(Node n : finalPath) {
+			System.out.println("Next step...");
+			grid[n.getNodePositiony()][n.getNodePositionx()] = 3;
+			grid[goalNode.getNodePositiony()][goalNode.getNodePositionx()] = 4;
+			for(int[] r : grid) {
+				System.out.println(Arrays.toString(r));
+			}
+			System.out.println();
+		}		
+	    System.out.println();
+	    System.out.println("Final path taken from " + startNode.getNodePosition().toWord() + " to " + goalNode.getNodePosition().toWord());
+    	System.out.print(startNode.getNodePosition().toWord());
+	    for(Node p: finalPath) {
+	    	System.out.print("->" + p.getNodePosition().toWord());
+	    }
+    	System.out.println();
+    	System.out.println();
+	}	
+	
 	static class Position{
 		int x = 0;
 		int y = 0;
@@ -105,14 +279,13 @@ public class assignment98 {
 	            return false;
 	        return true;
 	    }
-		
 	}
 		
 	static class Node{
 
-		int f = 0;
-		int g = 0;
-		int h = 0;
+		double f = 0;
+		double g = 0;
+		double h = 0;
 		
 		Node parent;
 		Position position;
@@ -122,13 +295,13 @@ public class assignment98 {
 			this.position = position;
 		}
 		
-		public int getF() {
+		public double getF() {
 			return f;
 		}
-		public int getG() {
+		public double getG() {
 			return g;
 		}
-		public int getH() {
+		public double getH() {
 			return h;
 		}
 		public Node getParent() {
@@ -146,20 +319,14 @@ public class assignment98 {
 		}
 		
 		
-		public void setF(int f) {
+		public void setF(double f) {
 			this.f = f;
 		}
-		public void setG(int g) {
+		public void setG(double g) {
 			this.g = g;
 		}
-		public void setH(int h) {
+		public void setH(double h) {
 			this.h = h;
-		}
-		public void setParent(Node parent) {
-			this.parent = parent;
-		}
-		public void setNodePosition(Position position) {
-			this.position = position;
 		}
 				
 		public boolean isEmpty() {
@@ -247,172 +414,4 @@ public class assignment98 {
 		}
 		return position;
 	}
-	
-	public void aStar(int[][] grid, Position start, Position goal) {
-		System.out.println();
-		System.out.println("Searching for a path...");
-		// Instantiate start and goal nodes
-		Node startNode = new Node(null, start);
-		startNode.setF(0);
-		startNode.setG(0);
-		startNode.setH(0);
-		
-		Node goalNode = new Node(null, goal);
-		goalNode.setF(0);
-		goalNode.setG(0);
-		goalNode.setH(0);
-
-		// Instantiate empty lists
-		PriorityQueue<Node> frontier = new PriorityQueue<>(5, new nodeComparator());
-		ArrayList<Node> visited = new ArrayList<Node>();	
-		
-		// Add start node
-		frontier.add(startNode);
-				
-		// Loop through frontier
-		while(frontier.size() > 0) {
-	
-			// Get current node
-			Node currentNode = frontier.remove();
-			for(Node n : frontier) {
-				if(n.f < currentNode.f) {
-					currentNode = n;
-				}
-			}
-
-			// Move current node from frontier to visited
-			frontier.remove(currentNode);
-			visited.add(currentNode);
-			
-			// If goal is found, print the path	
-			if(currentNode.getNodePosition().toWord().equals(goalNode.getNodePosition().toWord())) {	    	
-				Node[] finalPath = null;		    	
-				ArrayList<Node> nodeList = new ArrayList<>();
-				Node current = currentNode;
-				while(!current.isEmpty()) {
-					nodeList.add(current);
-					current = current.parent;
-					
-				// Reverses path for printing
-				Collections.reverse(nodeList);
-				Object[] objPath = nodeList.toArray();
-				finalPath = new Node[nodeList.size()/2];
-				for(int i = 0; i < objPath.length/2; i++) {
-					finalPath[i] = (Node)objPath[i];
-					}
-				}	
-				
-				// Prints path
-			    updateGrid(grid, finalPath, startNode, goalNode);  
-			    break;
-			}
-		ArrayList<Node> children = new ArrayList<>();	
-		adjacentCell location[] = new adjacentCell[4];
-		location[0] = new adjacentCell(0,-1);
-		location[1] = new adjacentCell(0,1);
-		location[2] = new adjacentCell(-1,0);
-		location[3] = new adjacentCell(1,0);
-		for(adjacentCell p : location) {
-			Position newPosition = new Position(currentNode.getNodePositionx()+ p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
-			Node p1 = new Node(currentNode, newPosition);
-            if(p1.getNodePositionx() > (grid.length - 1) ||
-            	p1.getNodePositionx()  < 0 ||
-            	p1.getNodePositiony()  > grid.length - 1 ||
-            	p1.getNodePositiony()  < 0) {
-            	continue;
-            }
-
-            if(grid[newPosition.gety()][newPosition.getx()] != 0){
-            	continue;
-            	}
-            
-            Node newNode = new Node(p1, newPosition);
-            children.add(newNode);
-			}
-		for(Node c1 : children) {
-			for(Node c2 : visited) {
-				if(c1.equals(c2)) {
-					continue;
-					}
-				}
-	         c1.g = currentNode.g + 1;
-	         c1.h = Math.abs(c1.getNodePositionx() - goalNode.getNodePositionx()) + Math.abs(c1.getNodePositiony() - goalNode.getNodePositiony());
-	         c1.f = c1.g + c1.h;
-	         for(Node c3 : frontier) {
-	        	 if(c1.equals(c3)){
-	        		 if(c1.g > c3.g) {
-	        			 continue;
-	        		 }
-	        	 }
-	         }
-	         frontier.add(c1);
-			}
-		if(frontier.size()>10000) {
-			System.out.println("No path found");
-			break;
-			}
-		}
-	}
-
-	public static int[][] generateGrid(){
-		// Generate blank grid
-		int[][] grid = new int[15][15];
-				
-		// Generate grid
-		System.out.println("Grid (1 indicates blocked cell, 0 indicates free cell)");
-		for(int i = 0; i < 15; i++) {
-			for(int j = 0; j < 15; j++) {
-				grid[i][j] = 0;
-			}
-		}
-
-		// Generate 10% of blocked cells
-		int[] blockedCells = new int[(int)Math.ceil(15*15/10)+1];
-		Arrays.fill(blockedCells, 1);
-		Random r = new Random();
-		for(int c = 0; c < blockedCells.length; c++) {
-			int i = r.nextInt(15);
-			int j = r.nextInt(15);
-			if(grid[i][j]==1) {
-				c--;
-			}
-			grid[i][j] = blockedCells[c];
-		}
-		for(int[] i: grid) {
-			System.out.println(Arrays.toString(i));
-		}		
-		System.out.println();
-		return grid;
-	}
-	
-	private void updateGrid(int[][] grid, Node[] finalPath, Node startNode, Node goalNode) {
-		System.out.println("Path found!");
-		System.out.println();
-		System.out.println("Updated grid with path");
-		System.out.println("2: start node, 3: path, 4: goal node");
-		
-		// Update grid
-		grid[startNode.getNodePositiony()][startNode.getNodePositionx()] = 2;
-		grid[goalNode.getNodePositiony()][goalNode.getNodePositionx()] = 4;
-		for(int[] r : grid) {
-			System.out.println(Arrays.toString(r));
-			}
-		for(Node n : finalPath) {
-			System.out.println("Next step...");
-			grid[n.getNodePositiony()][n.getNodePositionx()] = 3;
-			grid[goalNode.getNodePositiony()][goalNode.getNodePositionx()] = 4;
-			for(int[] r : grid) {
-				System.out.println(Arrays.toString(r));
-			}
-			System.out.println();
-		}		
-	    System.out.println();
-	    System.out.println("Final path taken from " + startNode.getNodePosition().toWord() + " to " + goalNode.getNodePosition().toWord());
-    	System.out.print(startNode.getNodePosition().toWord());
-	    for(Node p: finalPath) {
-	    	System.out.print("->" + p.getNodePosition().toWord());
-	    }
-    	System.out.println();
-    	System.out.println();
-	}	
 }
