@@ -209,6 +209,7 @@ public class assignment98 {
 	public static Position userInput(int[][] grid, Scanner s) {
 		boolean valid = false;
 		Position position = null;
+
 		while(!valid) {
 			System.out.print("Enter x coordinate > ");
 		    while(!s.hasNextInt()) {
@@ -217,7 +218,12 @@ public class assignment98 {
 		        s.next();
 		    }
 			int x = s.nextInt();
+			while(x < 0 || x > grid.length-1) {
+				System.out.print("x value was out of bounds, please enter a value between 0 and 14 > ");
+				x = s.nextInt();
+			}
 			s.nextLine();
+			
 			System.out.print("Enter y coordinate > ");
 		    while(!s.hasNextInt()) {
 		        System.out.println("Input is not a valid integer!");
@@ -225,7 +231,12 @@ public class assignment98 {
 		        s.next();
 		    }
 			int y = s.nextInt();
+			while(y < 0 || y > grid.length-1) {
+				System.out.print("y value was out of bounds, please enter a value between 0 and 14 > ");
+				y = s.nextInt();
+			}
 			s.nextLine();
+			
 			if(grid[y][x] != 1) {
 				valid = true;
 				position = new Position(x,y);
@@ -266,7 +277,6 @@ public class assignment98 {
 			for(Node n : frontier) {
 				if(n.f < currentNode.f) {
 					currentNode = n;
-
 				}
 			}
 
@@ -311,7 +321,7 @@ public class assignment98 {
             	p1.getNodePositiony()  < 0) {
             	continue;
             }
-            
+
             if(grid[newPosition.gety()][newPosition.getx()] != 0){
             	continue;
             	}
@@ -321,7 +331,7 @@ public class assignment98 {
 			}
 		for(Node c1 : children) {
 			for(Node c2 : visited) {
-				if(c1 == c2) {
+				if(c1.equals(c2)) {
 					continue;
 					}
 				}
@@ -337,7 +347,10 @@ public class assignment98 {
 	         }
 	         frontier.add(c1);
 			}
-		System.out.print(frontier.size());
+		if(frontier.size()>10000) {
+			System.out.println("No path found");
+			break;
+			}
 		}
 	}
 
