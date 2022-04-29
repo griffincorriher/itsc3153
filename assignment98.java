@@ -9,12 +9,32 @@ public class assignment98 {
 	public static void main(String[] args){
 		Scanner s = new Scanner(System.in);
 		boolean startSearch = true;
-		Position start = new Position(0,0);
-		Position goal = new Position(0,0);
+
 		
 		while(startSearch){
 			assignment98 a = new assignment98();
-			int[][] grid = generateGrid();
+//			int[][] grid = generateGrid();
+			
+			
+			  int[][] grid =   {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+								{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+								{1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+								{0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,0, 1, 0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0},
+								{0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+								{0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0},
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0, 0, 0, 0, 0}, 
+								{0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1},
+								{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0}};
+			 
+			
+			Position start = new Position(0,0);
+			Position goal = new Position(0,0);
 			// Get user input
 			while(start.toWord().equals(goal.toWord())) {
 				System.out.println("Select start location");
@@ -27,7 +47,6 @@ public class assignment98 {
 			}
 
 			// Perform A* search
-
 			a.aStar(grid, start, goal);
 
 
@@ -36,6 +55,7 @@ public class assignment98 {
 			while (response == null || !response.equals("y") || !response.equals("n")) {
 				System.out.print("Would you like to search again? (y or n) > ");
 				response = s.nextLine().toLowerCase();
+				System.out.println();
 				switch(response) {
 					case ("y"):
 						startSearch = true;
@@ -191,9 +211,19 @@ public class assignment98 {
 		Position position = null;
 		while(!valid) {
 			System.out.print("Enter x coordinate > ");
+		    while(!s.hasNextInt()) {
+		        System.out.println("Input is not a valid integer!");
+				System.out.print("Enter x coordinate > ");
+		        s.next();
+		    }
 			int x = s.nextInt();
 			s.nextLine();
 			System.out.print("Enter y coordinate > ");
+		    while(!s.hasNextInt()) {
+		        System.out.println("Input is not a valid integer!");
+				System.out.print("Enter y coordinate > ");
+		        s.next();
+		    }
 			int y = s.nextInt();
 			s.nextLine();
 			if(grid[y][x] != 1) {
@@ -232,10 +262,11 @@ public class assignment98 {
 		while(frontier.size() > 0) {
 	
 			// Get current node
-			Node currentNode = frontier.peek();
+			Node currentNode = frontier.remove();
 			for(Node n : frontier) {
 				if(n.f < currentNode.f) {
 					currentNode = n;
+
 				}
 			}
 
@@ -263,7 +294,6 @@ public class assignment98 {
 				
 				// Prints path
 			    updateGrid(grid, finalPath, startNode, goalNode);  
-
 			    break;
 			}
 		ArrayList<Node> children = new ArrayList<>();	
@@ -276,13 +306,13 @@ public class assignment98 {
 			Position newPosition = new Position(currentNode.getNodePositionx()+ p.getxValue(), currentNode.getNodePositiony() + p.getyValue());
 			Node p1 = new Node(currentNode, newPosition);
             if(p1.getNodePositionx() > (grid.length - 1) ||
-               p1.getNodePositionx() < 0 ||
-               p1.getNodePositiony() > grid.length - 1 ||
-               p1.getNodePositiony() < 0) {
+            	p1.getNodePositionx()  < 0 ||
+            	p1.getNodePositiony()  > grid.length - 1 ||
+            	p1.getNodePositiony()  < 0) {
             	continue;
             }
             
-            if(grid[p1.getNodePositiony()][p1.getNodePositionx()] != 0){
+            if(grid[newPosition.gety()][newPosition.getx()] != 0){
             	continue;
             	}
             
@@ -298,13 +328,16 @@ public class assignment98 {
 	         c1.g = currentNode.g + 1;
 	         c1.h = Math.abs(c1.getNodePositionx() - goalNode.getNodePositionx()) + Math.abs(c1.getNodePositiony() - goalNode.getNodePositiony());
 	         c1.f = c1.g + c1.h;
-	         for(Node n : frontier) {
-	        	 if(c1 == n && c1.g > n.g) {
-	        		 continue;
-	        	 	}
-	         	}
+	         for(Node c3 : frontier) {
+	        	 if(c1.equals(c3)){
+	        		 if(c1.g > c3.g) {
+	        			 continue;
+	        		 }
+	        	 }
+	         }
 	         frontier.add(c1);
 			}
+		System.out.print(frontier.size());
 		}
 	}
 
