@@ -2,17 +2,17 @@
 // https://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
 // https://www.geeksforgeeks.org/implement-priorityqueue-comparator-java/
 
-package assignment98;
+package Astar;
 import java.util.*;
 
-public class assignment98 {
+public class Astar {
 	public static void main(String[] args){
 		Scanner s = new Scanner(System.in);
 		boolean startSearch = true;
 
 		
 		while(startSearch){
-			assignment98 a = new assignment98();
+			Astar a = new Astar();
 //			int[][] grid = generateGrid();
 			
 			
